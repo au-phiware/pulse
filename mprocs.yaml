@@ -1,0 +1,15 @@
+procs:
+  nvim:
+    cmd: ["nvim"]
+  terminal:
+    shell: "$SHELL -i"
+    stop: SIGKILL
+  pulsed:
+    cmd: ["start-pulse-service"]
+  builder:
+    cmd: ["start-builder"]
+  database:
+    cmd: ["start-database"]
+    autorestart: true
+
+proc_list_width: 18

@@ -1,6 +1,3 @@
-# Include variables from the .envrc file
-include .envrc
-
 .DEFAULT_GOAL := build
 
 # ==================================================================================== #
@@ -25,6 +22,11 @@ confirm:
 run:
 	@go run ./cmd/server
 .PHONY:run
+
+## start: starts a local development environment
+start:
+	@start
+.PHONY:start
 
 # ==================================================================================== #
 # QUALITY CONTROL
@@ -64,19 +66,20 @@ vendor:
 # BUILD
 # ==================================================================================== #
 #
+# Determine all Go files the project depends on, excluding standard library
+SERVER_FILES = $(shell go list -f '{{if not .Standard}}{{$$dir := .Dir}}{{range .GoFiles}}{{printf "%s/%s\n" $$dir .}}{{end}}{{end}}' -deps ./cmd/server)
+CLIENT_FILES = $(shell go list -f '{{if not .Standard}}{{$$dir := .Dir}}{{range .GoFiles}}{{printf "%s/%s\n" $$dir .}}{{end}}{{end}}' -deps ./cmd/client)
 
-## build/server: build cmd/server
-build/server:
+## build cmd/server
+bin/pulse-server: $(SERVER_FILES)
 	@echo 'Compiling server...'
 	go build -ldflags="-X main.serverName=${SERVER_NAME} -X main.port=${PORT} -X main.uri=${URI} -X main.db=${DB}" -o=./bin/pulse-server ./cmd/server
-.PHONY:build/server
 
-## build/client: build cmd/client
-build/client:
+## build cmd/client
+bin/pulse-client: $(CLIENT_FILES)
 	@echo 'Compiling client...'
 	go build -ldflags="-X main.serverName=${SERVER_NAME} -X main.port=${PORT} -X main.hostname=${HOSTNAME}" -o=./bin/pulse-client ./cmd/client
-.PHONY:build/client
 
 ## build: builds the server and client applications
-build: audit build/server build/client
+build: audit bin/pulse-server bin/pulse-client
 .PHONY:build

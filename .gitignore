@@ -4,7 +4,9 @@
 *.dll
 *.so
 *.dylib
-bin
+/bin
+/tmp
+/result
 
 # environment variables
 .envrc
