@@ -9,7 +9,7 @@ pkgs.buildGoModule {
   pname = "pulse";
   version = "0.1.5";
   src = ../.;
-  vendorHash = null;
+  vendorHash = "sha256-r7441WMiCMmOCJtGe0tUr4rFlc/nRDd6uiGtNJozNOo=";
 
   buildInputs = with pkgs; [ go gnumake ];
 
