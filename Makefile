@@ -31,16 +31,18 @@ run:
 # ==================================================================================== #
 
 ## test: run all tests
-.PHONY: test
-test: test
+test:
 	@echo 'Removing test cache...'
 	go clean -testcache
 	@echo 'Running tests...'
 	go test -race -vet=off -timeout 30s ./...
+.PHONY: test
 
-
-## audit: tidy and vendor dependencies and format, vet and test all code
-audit: vendor
+## audit: tidy and verify dependencies and format, vet and test all code
+audit:
+	@echo 'Tidying and verifying module dependencies...'
+	go mod tidy
+	go mod verify
 	@echo 'Formatting code...'
 	go fmt ./...
 	@echo 'Vetting code...'
@@ -49,16 +51,6 @@ audit: vendor
 	@echo 'Running tests...'
 	go test -race -vet=off ./...
 .PHONY:audit
-
-## vendor: tidy and vendor dependencies
-vendor:
-	@echo 'Tidying and verifying module dependencies...'
-	go mod tidy
-	go mod verify
-	@echo 'Vendoring dependencies...'
-	go mod vendor
-.PHONY:vendor
-
 
 # ==================================================================================== #
 # BUILD
